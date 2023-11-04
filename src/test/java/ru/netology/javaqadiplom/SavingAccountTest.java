@@ -5,119 +5,66 @@ import org.junit.jupiter.api.Test;
 
 public class SavingAccountTest {
     @Test
-    public void whenNegativeInitialBalancePay() {        //отрицательный initialBalance V
-        SavingAccount account = new SavingAccount(-1, 100, 5_000, 1);
+    public void whenNegativeInitialBalance() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            account.pay(10);
+            new SavingAccount(-1, 100, 5_000, 1);
         });
     }
 
     @Test
-    public void whenNegativeInitialBalanceAdd() {        //отрицательный initialBalance V
-        SavingAccount account = new SavingAccount(-1, 100, 5_000, 1);
+    public void whenMinBalanceNegative() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            account.add(10);
+            new SavingAccount(700, -1, 5_000, 1);
         });
     }
 
     @Test
-    public void boundaryValueInitialBalanceLessMinBalancePay() {        // initialBalance меньше  мин на 1 р VV
-        SavingAccount account = new SavingAccount(99, 100, 5_000, 1);
+    public void whenMinBalanceMoreMaxBalancePay() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            account.pay(10);
+            new SavingAccount(5_000, 5_000, 3_000, 4);
         });
     }
 
     @Test
-    public void boundaryValueInitialBalanceLessMinBalanceAdd() {        // initialBalance меньше  мин на 1 р VV
-        SavingAccount account = new SavingAccount(99, 100, 5_000, 1);
+    public void whenNegativeRate() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            account.add(10);
+            new SavingAccount(800, 100, 3_000, -1);
         });
     }
 
     @Test
-    public void whenInitialBalanceEqualMinPlusAdd() {     // initialBalance = min + пополнение
-        SavingAccount account = new SavingAccount(100, 100, 5_000, 1);
-        account.add(200);
-        Assertions.assertEquals(300, account.getBalance());
-    }
-
-    @Test
-    public void boundaryValueInitialBalanceThanMinBalancePay() {        //initialBalance больше  мин на 1 р
-        SavingAccount account = new SavingAccount(101, 100, 5_000, 1);
-        account.pay(1);
-        Assertions.assertEquals(100, account.getBalance());
-    }
-
-    @Test
-    public void whenMinBalanceNegativePay() {        // min < 0
-        SavingAccount account = new SavingAccount(700, -1, 5_000, 1);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            account.pay(200);
-        });
-    }
-
-    @Test
-    public void whenMinBalanceNegativeAdd() {        // min < 0
-        SavingAccount account = new SavingAccount(700, -1, 5_000, 1);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            account.add(200);
-        });
-    }
-
-    @Test
-    public void saleInTheNegative() {
-        SavingAccount account = new SavingAccount(0, 0, 5_000, 1);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            account.pay(200);
-        });
-    }
-
-    @Test
-    public void whenMinBalanceMoreMaxBalancePay() {        //минимальный баланс больше максимального
-        SavingAccount account = new SavingAccount(5_000, 5_000, 3_000, 4);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            account.pay(100);
-        });
-    }
-
-    @Test
-    public void whenMinBalanceMoreMaxBalanceAdd() {        //минимальный баланс больше максимального
-        SavingAccount account = new SavingAccount(5_000, 5_000, 3_000, 4);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            account.add(100);
-        });
-    }
-
-    @Test
-    public void whenNegativeRatePay() {        //rate = -1
-        SavingAccount account = new SavingAccount(800, 100, 3_000, -1);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            account.pay(200);
-        });
-    }
-
-    @Test
-    public void whenNegativeRateAdd() {        //rate = -1
-        SavingAccount account = new SavingAccount(800, 100, 3_000, -1);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            account.add(200);
-        });
-    }
-
-    @Test
-    public void whenPurchaseInTheNegative() {        // покупка в минус
+    public void whenPurchaseInTheNegative() {
         SavingAccount account = new SavingAccount(800, 100, 5_000, 1);
         account.pay(2000);
         Assertions.assertEquals(800, account.getBalance());
     }
 
     @Test
-    public void shouldAddMoreMaxBalance() {     // пополнение больше максимального, не сумма больше, а само пополнение больше мах
+    public void shouldAddMoreMaxBalance() {
         SavingAccount account = new SavingAccount(800, 100, 5_000, 4);
         account.add(4_900);
         Assertions.assertEquals(800, account.getBalance());
+    }
+
+    @Test
+    public void boundaryValueInitialBalanceLessMinBalancePay() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            new SavingAccount(99, 100, 5_000, 1);
+        });
+    }
+
+    @Test
+    public void whenInitialBalanceEqualMinPlusAdd() {
+        SavingAccount account = new SavingAccount(100, 100, 5_000, 1);
+        account.add(200);
+        Assertions.assertEquals(300, account.getBalance());
+    }
+
+    @Test
+    public void boundaryValueInitialBalanceThanMinBalancePay() {
+        SavingAccount account = new SavingAccount(101, 100, 5_000, 1);
+        account.pay(1);
+        Assertions.assertEquals(100, account.getBalance());
     }
 
     @Test
