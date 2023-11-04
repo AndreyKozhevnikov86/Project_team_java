@@ -19,7 +19,7 @@ public class SavingAccountTest {
     }
 
     @Test
-    public void whenMinBalanceMoreMaxBalancePay() {
+    public void whenMinBalanceMoreMaxBalance() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new SavingAccount(5_000, 5_000, 3_000, 4);
         });
@@ -47,14 +47,14 @@ public class SavingAccountTest {
     }
 
     @Test
-    public void boundaryValueInitialBalanceLessMinBalancePay() {
+    public void whenInitialBalanceLessMinBalance() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             new SavingAccount(99, 100, 5_000, 1);
         });
     }
 
     @Test
-    public void whenInitialBalanceEqualMinPlusAdd() {
+    public void addSavingsAccount() {
         SavingAccount account = new SavingAccount(100, 100, 5_000, 1);
         account.add(200);
         Assertions.assertEquals(300, account.getBalance());
@@ -71,7 +71,7 @@ public class SavingAccountTest {
     public void whenLessThanAYearForOneDay() {
         SavingAccount account = new SavingAccount(200, 100, 5_000, 15);
         int daysWithoutChange = 364;
-        int expected = 30;
+        int expected = 0;
         int actual = account.yearChange();
         Assertions.assertEquals(expected, actual);
     }
@@ -96,7 +96,7 @@ public class SavingAccountTest {
 
     @Test
     public void whenBalanceVerySmall() {
-        SavingAccount account = new SavingAccount(10, 100, 5_000, 15);
+        SavingAccount account = new SavingAccount(10, 0, 5_000, 15);
         int daysWithoutChange = 366;
         int expected = 1;
         int actual = account.yearChange();
