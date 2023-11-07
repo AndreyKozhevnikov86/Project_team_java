@@ -68,28 +68,29 @@ public class SavingAccountTest {
     }
 
     @Test
-    public void whenLessThanAYearForOneDay() {
+    public void whenBalanceLessInitialBalance() {
         SavingAccount account = new SavingAccount(200, 100, 5_000, 15);
-        int daysWithoutChange = 364;
+        account.pay(1);
         int expected = 0;
         int actual = account.yearChange();
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void exactlyOneYear() {
+    public void whenBalanceEqualInitialBalance() {
         SavingAccount account = new SavingAccount(200, 100, 5_000, 15);
-        int daysWithoutChange = 365;
+        account.pay(0);
+        account.add(0);
         int expected = 30;
         int actual = account.yearChange();
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
-    public void moreForTheDay() {
+    public void whenBalanceMoreInitialBalance() {
         SavingAccount account = new SavingAccount(200, 100, 5_000, 15);
-        int daysWithoutChange = 366;
-        int expected = 30;
+        account.add(100);
+        int expected = 0;
         int actual = account.yearChange();
         Assertions.assertEquals(expected, actual);
     }
@@ -97,7 +98,8 @@ public class SavingAccountTest {
     @Test
     public void whenBalanceVerySmall() {
         SavingAccount account = new SavingAccount(10, 0, 5_000, 15);
-        int daysWithoutChange = 366;
+        account.pay(0);
+        account.add(0);
         int expected = 1;
         int actual = account.yearChange();
         Assertions.assertEquals(expected, actual);
