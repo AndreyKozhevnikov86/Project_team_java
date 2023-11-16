@@ -7,6 +7,7 @@ package ru.netology.javaqadiplom;
  */
 public class CreditAccount extends Account {
     protected int creditLimit;
+    protected int initialBalance;
 
     /**
      * Создаёт новый объект кредитного счёта с заданными параметрами.
@@ -17,14 +18,25 @@ public class CreditAccount extends Account {
      * @param rate - неотрицательное число, ставка кредитования для расчёта долга за отрицательный баланс
      */
     public CreditAccount(int initialBalance, int creditLimit, int rate) {
-        if (rate <= 0) {
+        if (rate < 0) {
             throw new IllegalArgumentException(
-                    "Накопительная ставка не может быть отрицательной, а у вас: " + rate
+                    "Ставка кредитования не может быть отрицательной, а у вас: " + rate
+            );
+        }
+        if (initialBalance < 0) {
+            throw new IllegalArgumentException(
+                    "Начальный баланс не может быть отрицательным, а у вас: " + initialBalance
+            );
+        }
+        if (creditLimit < 0) {
+            throw new IllegalArgumentException(
+                    "Начальный баланс не может быть отрицательным, а у вас: " + creditLimit
             );
         }
         this.balance = initialBalance;
         this.creditLimit = creditLimit;
         this.rate = rate;
+        this.initialBalance = initialBalance;
     }
 
     /**
@@ -43,9 +55,9 @@ public class CreditAccount extends Account {
         }
         balance = balance - amount;
         if (balance > -creditLimit) {
-            balance = -amount;
             return true;
         } else {
+            balance = initialBalance;
             return false;
         }
     }
@@ -80,7 +92,9 @@ public class CreditAccount extends Account {
      */
     @Override
     public int yearChange() {
-        return balance / 100 * rate;
+        if (balance < 0) {
+            return balance * rate / 100;
+        } else return 0;
     }
 
     public int getCreditLimit() {
