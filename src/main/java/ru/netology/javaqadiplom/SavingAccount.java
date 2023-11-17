@@ -10,6 +10,8 @@ public class SavingAccount extends Account {
     protected int minBalance;
     protected int maxBalance;
 
+    protected int initialBalance;
+
     /**
      * Создаёт новый объект сберегательного счёта с заданными параметрами.
      * Если параметры некорректны (мин. баланс больше максимального и так далее), то
@@ -20,11 +22,32 @@ public class SavingAccount extends Account {
      * @param rate - неотрицательное число, ставка в процентах годовых на остаток
      */
     public SavingAccount(int initialBalance, int minBalance, int maxBalance, int rate) {
-        if (rate < 0) {
+        if (initialBalance < minBalance){
             throw new IllegalArgumentException(
-              "Накопительная ставка не может быть отрицательной, а у вас: " + rate
+                    "Начальный баланс не может быть меньше минимального, а у вас начальный баланс: " + initialBalance + ", минимальный баланс: " + minBalance
             );
         }
+        if (minBalance < 0){
+            throw new IllegalArgumentException(
+                    "Минимальный баланс не может быть jnhbwfntkmysv, а у вас: " + minBalance
+            );
+        }
+        if (initialBalance < 0){
+            throw new IllegalArgumentException(
+                    "Начальный баланс не может быть меньше 0, а у вас: " + initialBalance
+            );
+        }
+        if (minBalance > maxBalance){
+            throw new IllegalArgumentException(
+                    "Минимальный баланс не может быть больше максимального, а у вас: " + minBalance
+            );
+        }
+        if (rate < 0) {
+            throw new IllegalArgumentException(
+                    "Накопительная ставка не может быть отрицательной, а у вас: " + rate
+            );
+        }
+        this.initialBalance = initialBalance;
         this.balance = initialBalance;
         this.minBalance = minBalance;
         this.maxBalance = maxBalance;
@@ -46,9 +69,10 @@ public class SavingAccount extends Account {
             return false;
         }
         balance = balance - amount;
-        if (balance > minBalance) {
+        if (balance >= minBalance) {
             return true;
         } else {
+            balance = initialBalance;
             return false;
         }
     }
@@ -69,8 +93,8 @@ public class SavingAccount extends Account {
         if (amount <= 0) {
             return false;
         }
-        if (balance + amount < maxBalance) {
-            balance = amount;
+        if (balance + amount <= maxBalance) {
+            balance = amount + balance;
             return true;
         } else {
             return false;
@@ -86,7 +110,11 @@ public class SavingAccount extends Account {
      */
     @Override
     public int yearChange() {
-        return balance / 100 * rate;
+        if (balance == initialBalance) {
+            return balance * rate / 100;
+        } else {
+            return 0;
+        }
     }
 
     public int getMinBalance() {
